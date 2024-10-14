@@ -1,5 +1,5 @@
 import { callbackify } from "util";
-import { Block } from "./Blcok.js";
+import { Block } from "./Block.js";
 import { Transaction } from "./Transaction.js";
 import fs from 'fs';
 import { debug, dir, error } from "console";
@@ -53,6 +53,9 @@ export class Blockchain {
 
         this.saveChainToFile();
         this.pendingTransactions = [];  // refresh the pendingTransactions
+
+        this.saveChainToFile();
+
     }
 
     addTransactionsToBlock(transaction) {

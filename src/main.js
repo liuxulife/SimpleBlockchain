@@ -1,6 +1,6 @@
 import { Blockchain } from "./Blockchain.js";
 import { Transaction } from "./Transaction.js";
-import { Block } from "./Blcok.js";
+import { Block } from "./Block.js";
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { P2PServer } from "./P2PServer.js";
