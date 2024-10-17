@@ -1,11 +1,11 @@
 // import { send } from "process";
-import { Block } from "./Blcok.js";
+import { Block } from "./Block.js";
 import { Blockchain } from "./Blockchain.js";
 import net from 'net';
 // import { type } from "os";
 
 const Message = {
-    type: ['BLOCKCHAIN_REQUEST', 'BLOCKCHAIN_RESPONSE', 'PEERS_REQUEST', 'PEERS_RESPONSE', 'KEEP_ALIVE'],
+    type: ['BLOCKCHAIN_REQUEST', 'BLOCKCHAIN_RESPONSE', 'PEERS_REQUEST', 'PEERS_RESPONSE', 'TRANSACTION_BROADCAST', 'KEEP_ALIVE'],
     data: null
 }
 
@@ -65,6 +65,9 @@ export class P2PServer {
             case "KEEP_ALIVE":
                 console.debug('Received keep alive message');
                 break;
+            case "TRANSACTION_BROADCAST":
+                this.handfleTransactionBroadcast(message.data);
+                break;
             default:
                 console.error('Received unknown message type');
         }
@@ -79,7 +82,7 @@ export class P2PServer {
                 type: 'KEEP_ALIVE',
                 data: null
             }));
-        }, 1000);
+        }, 1000 * 10);
 
         // every 10 seconds, we will console the peers and the height of the blockchain
         setInterval(() => {
@@ -151,6 +154,22 @@ export class P2PServer {
             this.blockchain.saveChainToFile();
         } else {
             console.debug("Received blockchain is invalid or shorter than current blockchain");
+        }
+    }
+
+    broadCastTransaction(transaction) {
+        const message = {
+            type: 'TRANSACTION_BROADCAST',
+            data: transaction
+        }
+        this.handleTransactionBroadcast(message);
+    }
+
+    handfleTransactionBroadcast(transaction) {
+        try {
+            this.blockchain.addPendingTransaction(transaction);
+        } catch (error) {
+            console.error('Error handling transaction broadcast', error);
         }
     }
 

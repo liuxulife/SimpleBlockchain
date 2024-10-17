@@ -1,5 +1,5 @@
 import { callbackify } from "util";
-import { Block } from "./Blcok.js";
+import { Block } from "./Block.js";
 import { Transaction } from "./Transaction.js";
 import fs from 'fs';
 import { debug, dir, error } from "console";
@@ -43,6 +43,8 @@ export class Blockchain {
     // }
 
     mineBlockWithPendingTransactions(miningRewardAddress) {
+        this.loadChainFromFile();   // ----  2 每次挖矿前，先加载区块链数据
+        
         const rewardTx = new Transaction(null, miningRewardAddress, this.miningReward);
         this.pendingTransactions.push(rewardTx)
 
@@ -51,11 +53,16 @@ export class Blockchain {
         // console.debug("Block is mined");
         this.chain.push(newBlock);
 
-        this.saveChainToFile();
+
         this.pendingTransactions = [];  // refresh the pendingTransactions
+
+        this.saveChainToFile();
+
     }
 
     addTransactionsToBlock(transaction) {
+        this.loadChainFromFile();   // ----  1 每次添加交易前，先加载区块链数据
+
         if (!transaction.txIsValid()) {
             throw new error("Transaction is invalid");
         }
@@ -155,9 +162,9 @@ export class Blockchain {
                 const fileContent = fs.readFileSync(this.dataPath, 'utf-8');
                 const loadedChain = JSON.parse(fileContent);
                 this.chain = loadedChain.map((blockdata) => {
-                    const block = new Block(blockdata.index, blockdata.timestamp, blockdata.data, blockdata.previousHash);
+                    const block = new Block(blockdata.timestamp, blockdata.data, blockdata.previousHash);
                     block.nonce = blockdata.nonce;
-                    block.hash = block.calculateHash();
+                    block.hash = blockdata.hash;
                     return block;
                 });
 

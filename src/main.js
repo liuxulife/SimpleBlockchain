@@ -1,6 +1,6 @@
 import { Blockchain } from "./Blockchain.js";
 import { Transaction } from "./Transaction.js";
-import { Block } from "./Blcok.js";
+import { Block } from "./Block.js";
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { P2PServer } from "./P2PServer.js";
@@ -59,13 +59,16 @@ myBlockchain.mineBlockWithPendingTransactions(myWalletAddress);
 myBlockchain.getWalletBalance(myWalletAddress)
 myBlockchain.getWalletBalance("address2")
 
-// const tx2 = new Transaction(myWalletAddress, 'address1', 50);
-// tx2.sign(myKey);
-// myBlockchain.addTransactionsToBlock(tx2);
-// console.log("Mining block 2...");
-// myBlockchain.mineBlockWithPendingTransactions(myWalletAddress);
-// myBlockchain.getWalletBalance(myWalletAddress)
-// myBlockchain.getWalletBalance("address1")
+
+const tx2 = new Transaction(myWalletAddress, 'address1', 50);
+tx2.sign(myKey);
+myBlockchain.addTransactionsToBlock(tx2);
+
+console.log("Mining block 2...");
+myBlockchain.mineBlockWithPendingTransactions(myWalletAddress);
+
+myBlockchain.getWalletBalance(myWalletAddress)
+myBlockchain.getWalletBalance("address1")
 
 
 const port = argv.port || 12315;
