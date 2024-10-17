@@ -17,7 +17,7 @@ export class Block {
 
 
     calculateHash() {
-        return sha256(this.previousHash + this.timestamp + this.transactions + this.nonce).toString();
+        return sha256(this.previousHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).toString();
     }
 
     // mint block
