@@ -12,7 +12,9 @@
   "dependencies": {
     "crypto-js": "^4.2.0",
     "elliptic": "^6.5.7",
+    "global": "^4.4.0",
     "mocha": "^10.7.3",
+    "nodemon": "^3.1.7",
     "yargs": "^17.7.2"
   }
 }
